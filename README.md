@@ -25,56 +25,35 @@ STEP-5: Read the characters row wise or column wise in the former order to get t
 ```
 #include <stdio.h>
 #include <string.h>
-#include <ctype.h>
 
 int main() {
-    char text[200];
-    int rails;
+    char text[200], rails[10][200] = {0};
+    int key, row = 0, dir = 1, i;
 
-    printf("Enter the plain text: ");
-    fgets(text, sizeof(text), stdin);
-    text[strcspn(text, "\n")] = '\0'; 
+    printf("Enter text: ");
+    scanf("%[^\n]", text);
 
-    char clean[200];
-    int k = 0;
-    for (int i = 0; text[i]; i++) {
-        if (isalpha((unsigned char)text[i])) {
-            clean[k++] = toupper((unsigned char)text[i]);
-        }
-    }
-    clean[k] = '\0';
+    printf("Enter rails (key): ");
+    scanf("%d", &key);
 
-    printf("Enter number of rails: ");
-    scanf("%d", &rails);
+    for (i = 0; text[i] != '\0'; i++) {
+        int len = strlen(rails[row]);
+        rails[row][len] = text[i];
+        rails[row][len+1] = '\0';
 
-    int len = strlen(clean);
-    char rail[rails][len];
-
-    for (int i = 0; i < rails; i++)
-        for (int j = 0; j < len; j++)
-            rail[i][j] = '\n';
-
-    int row = 0;
-    int dir_down = 0; 
-
-    for (int i = 0; i < len; i++) {
-        rail[row][i] = clean[i];
-        if (row == 0 || row == rails - 1)
-            dir_down = !dir_down;
-        row += dir_down ? 1 : -1;
+        if (row == 0) dir = 1;
+        else if (row == key-1) dir = -1;
+        row += dir;
     }
 
-    printf("\nCipher text: ");
-    for (int i = 0; i < rails; i++) {
-        for (int j = 0; j < len; j++) {
-            if (rail[i][j] != '\n')
-                printf("%c", rail[i][j]);
-        }
-    }
-
+    printf("Cipher: ");
+    for (i = 0; i < key; i++)
+        printf("%s", rails[i]);
     printf("\n");
+
     return 0;
 }
+
 
 ```
 # OUTPUT
